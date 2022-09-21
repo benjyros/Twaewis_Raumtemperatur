@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="430.0" prefWidth="679.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.twaewis.raumtemperatur.ViewController">
+   <children>
+      <Label layoutX="256.0" layoutY="14.0" text="Heizkosten Rechner">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="27.0" layoutY="71.0" text="Wohnung in qm2:" />
+      <TextField fx:id="tfArea" layoutX="153.0" layoutY="67.0" prefHeight="25.0" prefWidth="104.0" />
+      <Label layoutX="279.0" layoutY="71.0" text="qm2" />
+      <Label layoutX="378.0" layoutY="71.0" text="Wohnungshöhe:" />
+      <TextField fx:id="tfHeight" layoutX="496.0" layoutY="67.0" prefHeight="25.0" prefWidth="104.0" />
+      <Label layoutX="615.0" layoutY="71.0" text="m" />
+      <Label layoutX="27.0" layoutY="127.0" text="Heizungsart:" />
+      <ComboBox fx:id="cBoxHeating" layoutX="123.0" layoutY="120.0" prefHeight="26.0" prefWidth="134.0" />
+      <Label layoutX="378.0" layoutY="124.0" text="Wohnort:" />
+      <ComboBox fx:id="cBoxResidence" layoutX="465.0" layoutY="119.0" prefHeight="26.0" prefWidth="134.0" />
+      <Label fx:id="lblCosts" layoutX="31.0" layoutY="215.0" prefHeight="27.0" prefWidth="267.0">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblError" layoutX="372.0" layoutY="170.0" prefHeight="98.0" prefWidth="267.0" textFill="RED" />
+      <Button fx:id="btnCalculate" layoutX="273.0" layoutY="352.0" mnemonicParsing="false" onAction="#handleBtn_calculate" prefHeight="40.0" prefWidth="134.0" text="Berechnen">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Slider fx:id="sliderTemperature" blockIncrement="0.5" layoutX="200.0" layoutY="290.0" majorTickUnit="2.0" max="29.0" min="13.0" prefHeight="14.0" prefWidth="280.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="21.0" />
+      <Label fx:id="lblTemperature" layoutX="527.0" layoutY="290.0" prefHeight="26.0" prefWidth="104.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
