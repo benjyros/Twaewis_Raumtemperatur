@@ -18,7 +18,8 @@ public class Model {
 
     private final StringProperty costs = new SimpleStringProperty();
     private final StringProperty error = new SimpleStringProperty();
-    private final StringProperty temperature = new SimpleStringProperty();
+    private final StringProperty temperatureIn = new SimpleStringProperty();
+    private final StringProperty temperatureOut = new SimpleStringProperty();
 
     private final CheckEntries checkEntries;
     private final Calculator calculator;
@@ -34,10 +35,10 @@ public class Model {
         try {
             double check = Double.parseDouble(area);
 
-            checkEntries.setArea(new BigDecimal(area));
-            calculator.setArea(new BigDecimal(area));
+            checkEntries.setArea(check);
+            calculator.setArea(check);
         } catch (NumberFormatException e) {
-            checkEntries.setArea(new BigDecimal(0));
+            checkEntries.setArea(0);
         }
     }
 
@@ -52,22 +53,25 @@ public class Model {
         }
     }
 
-    public void setTemperature(double temperature) {
+    public void setTemperatureIn(double temperature) {
         try {
-            calculator.setTemperature(BigDecimal.valueOf(temperature));
+            calculator.setTemperatureIn(temperature);
         } catch (NumberFormatException e) {
-            calculator.setTemperature(BigDecimal.valueOf(21));
+            calculator.setTemperatureIn(21);
+        }
+    }
+
+    public void setTemperatureOut(double temperature) {
+        try {
+            calculator.setTemperatureOut(temperature);
+        } catch (NumberFormatException e) {
+            calculator.setTemperatureOut(-2);
         }
     }
 
     public void setHeating(String heating) {
         checkEntries.setHeating(heating);
         calculator.setHeating(heating);
-    }
-
-    public void setResidence(String residence) {
-        checkEntries.setResidence(residence);
-        calculator.setResidence(residence);
     }
 
     public void setErrorProperty() {
@@ -82,20 +86,20 @@ public class Model {
         if (!checkEntries.correctHeating()) {
             error += "Bitte geben Sie einen Heizungstyp ein.\n";
         }
-        if (!checkEntries.correctResidence()) {
-            error += "Bitte geben Sie einen Wohnort ein.\n";
-        }
 
         setError(error);
     }
 
     public boolean checkEntries() {
-        return checkEntries.correctArea() && checkEntries.correctHeight() && checkEntries.correctHeating() && checkEntries.correctResidence();
+        setErrorProperty();
+        return checkEntries.correctArea() && checkEntries.correctHeight() && checkEntries.correctHeating();
     }
 
     public void calculate() {
-        if (checkEntries()) {
-            setCosts(String.valueOf(calculator.getCosts()));
+        if (calculator.OutIsGreaterThanIn()) {
+            setCosts("Keine Kosten: Ihr Raum muss nicht mehr beheizt werden.");
+        } else if (checkEntries()) {
+            setCosts("Heizkosten: CHF " + String.valueOf(calculator.getCosts()) + " / pro Monat");
         } else {
             setCosts("n/A");
         }
@@ -125,12 +129,21 @@ public class Model {
         return this.error;
     }
 
-    public void setTemperatureProperty(double value) {
+    public void setTemperatureInProperty(double value) {
         DecimalFormat df = new DecimalFormat("##.#");
-        temperature.set(df.format(value) + " Grad");
+        temperatureIn.set(df.format(value) + " Grad");
     }
 
-    public StringProperty temperatureProperty() {
-        return temperature;
+    public void setTemperatureOutProperty(double value) {
+        DecimalFormat df = new DecimalFormat("##.#");
+        temperatureOut.set(df.format(value) + " Grad");
+    }
+
+    public StringProperty temperatureInProperty() {
+        return temperatureIn;
+    }
+
+    public StringProperty temperatureOutProperty() {
+        return temperatureOut;
     }
 }

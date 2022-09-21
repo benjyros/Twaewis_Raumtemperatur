@@ -27,13 +27,6 @@ import javafx.scene.paint.Color;
 public class ViewController implements Initializable {
 
     ObservableList<String> listHeating = FXCollections.observableArrayList("Gasheizung", "Ölheizung", "Pellets", "Wärmepumpe");
-    ObservableList<String> listResidence = FXCollections.observableArrayList(
-            "Aargau", "Appenzell Ausserrhoden", "Appenzell Innerrhoden", 
-            "Basel-Landschaft", "Basel-Stadt", "Bern", "Freiburg", "Genf",
-            "Glarus", "Graubünden", "Jura", "Luzern", "Neuenburg", "Nidwalden",
-            "Obwalden", "Schaffhausen", "Schwyz", "Solothurn", "St. Gallen",
-            "Tessin", "Thurgau", "Uri", "Waadt", "Wallis", "Zug", "Zürich"
-    );
     Model model = new Model();
 
     @FXML
@@ -43,24 +36,25 @@ public class ViewController implements Initializable {
     @FXML
     private ComboBox<String> cBoxHeating;
     @FXML
-    private ComboBox<String> cBoxResidence;
-    @FXML
     private Label lblCosts;
     @FXML
     private Label lblError;
     @FXML
-    private Slider sliderTemperature;
-    @FXML
     private Button btnCalculate;
     @FXML
-    private Label lblTemperature;
+    private Slider sliderTemperatureIn;
+    @FXML
+    private Label lblTemperatureIn;
+    @FXML
+    private Slider sliderTemperatureOut;
+    @FXML
+    private Label lblTemperatureOut;
     
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         cBoxHeating.setItems(listHeating);
-        cBoxResidence.setItems(listResidence);
         
         tfArea.textProperty().addListener(new ChangeListener<String>(){
             @Override
@@ -86,21 +80,44 @@ public class ViewController implements Initializable {
             }
         });
         
-        sliderTemperature.valueProperty().addListener(new ChangeListener<Object>(){
+        sliderTemperatureIn.valueProperty().addListener(new ChangeListener<Object>(){
             @Override
             public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
                 //set the value of mynumber property into the table
-                model.setTemperatureProperty(sliderTemperature.getValue());
-                model.setTemperature(sliderTemperature.getValue());
+                model.setTemperatureInProperty(sliderTemperatureIn.getValue());
+                model.setTemperatureIn(sliderTemperatureIn.getValue());
                 
-                if(sliderTemperature.getValue() < 19){
-                    lblTemperature.setTextFill(Color.web("#0000ff"));
+                if(sliderTemperatureIn.getValue() < 19){
+                    lblTemperatureIn.setTextFill(Color.web("#0000ff"));
                 }
-                else if(sliderTemperature.getValue() < 23){
-                    lblTemperature.setTextFill(Color.web("#ff8800"));
+                else if(sliderTemperatureIn.getValue() < 23){
+                    lblTemperatureIn.setTextFill(Color.web("#ff8800"));
                 }
                 else{
-                    lblTemperature.setTextFill(Color.web("#ff0000"));
+                    lblTemperatureIn.setTextFill(Color.web("#ff0000"));
+                }
+                
+                if(model.getBtnpressed()){
+                    model.calculate();
+                }
+            }
+        });
+        
+        sliderTemperatureOut.valueProperty().addListener(new ChangeListener<Object>(){
+            @Override
+            public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+                //set the value of mynumber property into the table
+                model.setTemperatureOutProperty(sliderTemperatureOut.getValue());
+                model.setTemperatureOut(sliderTemperatureOut.getValue());
+                
+                if(sliderTemperatureOut.getValue() < -5){
+                    lblTemperatureOut.setTextFill(Color.web("#8800ff"));
+                }
+                else if(sliderTemperatureOut.getValue() < 10){
+                    lblTemperatureOut.setTextFill(Color.web("#0000ff"));
+                }
+                else{
+                    lblTemperatureOut.setTextFill(Color.web("#ff8800"));
                 }
                 
                 if(model.getBtnpressed()){
@@ -121,28 +138,22 @@ public class ViewController implements Initializable {
             }
         });
         
-        cBoxResidence.valueProperty().addListener(new ChangeListener<String>(){
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                //set the value of mynumber property into the table
-                model.setResidence(cBoxResidence.getValue());
-                model.setErrorProperty();
-                if(model.getBtnpressed()){
-                    model.calculate();
-                }
-            }
-        });
-        
         lblError.textProperty().bind(model.errorProperty());
-        lblTemperature.textProperty().bind(model.temperatureProperty());
+        lblTemperatureIn.textProperty().bind(model.temperatureInProperty());
+        lblTemperatureOut.textProperty().bind(model.temperatureOutProperty());
     }
 
     @FXML
     private void handleBtn_calculate(ActionEvent event) {
         if(model.checkEntries()) {
+            model.setTemperatureIn(sliderTemperatureIn.getValue());
+            model.setTemperatureOut(sliderTemperatureOut.getValue());
+                
             lblCosts.textProperty().bind(model.costsProperty());
+            
             model.setBtnpressed(true);
             model.calculate();
+            
             btnCalculate.setVisible(false);
         }
     }

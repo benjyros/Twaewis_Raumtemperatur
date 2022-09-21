@@ -13,13 +13,12 @@ import java.math.BigDecimal;
  */
 public class CheckEntries {
     
-    private BigDecimal area = new BigDecimal(0);
+    private double area = 0;
     private BigDecimal height = new BigDecimal(0);
     
     private String heating = "";
-    private String residence = "";
     
-    public void setArea(BigDecimal area) {
+    public void setArea(double area) {
         this.area = area;
     }
 
@@ -30,13 +29,9 @@ public class CheckEntries {
     public void setHeating(String heating) {
         this.heating = heating;
     }
-
-    public void setResidence(String residence) {
-        this.residence = residence;
-    }
     
     public boolean correctArea() {
-        return area.intValue() != 0;
+        return area != 0;
     }
     
     public boolean correctHeight() {
@@ -47,7 +42,4 @@ public class CheckEntries {
         return !heating.equals("");
     }
     
-    public boolean correctResidence() {
-        return !residence.equals("");
-    }
 }
